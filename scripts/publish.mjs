@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { readdirSync, existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,14 +16,24 @@ const ORDER = [
   "nevotui-windows-x64-msvc",
 ];
 
+const EXISTING_MSG = "cannot publish over the previously published versions";
+
 function npmPublish(dir) {
   const name = JSON.parse(readFileSync(path.join(dir, "package.json"))).name;
   console.log(`\n> npm publish ${name}`);
-  execFileSync("npm", ["publish", "--access", "public"], {
+  const res = spawnSync("npm", ["publish", "--access", "public"], {
     cwd: dir,
-    stdio: "inherit",
+    encoding: "utf8",
     env: process.env,
   });
+  process.stdout.write(res.stdout ?? "");
+  process.stderr.write(res.stderr ?? "");
+  if (res.status === 0) return;
+  if (res.stderr?.includes(EXISTING_MSG)) {
+    console.log(`! ${name} already published - skipping`);
+    return;
+  }
+  throw new Error(`npm publish ${name} failed (exit ${res.status})`);
 }
 
 let failed = false;
