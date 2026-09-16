@@ -21,7 +21,24 @@ It is the terminal companion to the web version at [nevo.is-a.dev](https://nevo.
 - A terminal with ANSI support
 - **Network access** — the app fetches its content from the live API at startup
 
-## Install
+## Quick start (npm)
+
+Requires [Node.js](https://nodejs.org) v18+.
+
+```sh
+npx nevotui
+```
+
+Or install it globally:
+
+```sh
+npm install -g nevotui
+nevotui
+```
+
+Prebuilt binaries are published for Linux (x64/arm64, glibc + musl), macOS (x64/arm64), and Windows (x64).
+
+## Install from source
 
 ```sh
 cargo install --git https://github.com/iknevo/nevotui

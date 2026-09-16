@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: build + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run tests
+        run: cargo test --release
+      - name: Build release binary
+        run: cargo build --release
+      - name: Smoke test binary
+        run: |
+          ./target/release/nevotui --version
+          ./target/release/nevotui --help >/dev/null
+      - name: Assemble npm package
+        run: node scripts/build.mjs --tool cargo x86_64-unknown-linux-gnu
+      - name: Verify npm package scaffold
+        run: |
+          test -x dist/npm/nevotui-linux-x64-gnu/bin/nevotui
+          node -e "const p=require('./dist/npm/nevotui-linux-x64-gnu/package.json'); if(p.name!=='nevotui-linux-x64-gnu'||!p.os.includes('linux')) process.exit(1)"

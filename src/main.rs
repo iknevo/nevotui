@@ -14,8 +14,29 @@ use ratatui::{
     Terminal,
 };
 
+fn print_help() {
+    println!("nevotui - a terminal-based portfolio app");
+    println!();
+    println!("USAGE:");
+    println!("    nevotui [FLAGS]");
+    println!();
+    println!("FLAGS:");
+    println!("    -h, --help       Print help information");
+    println!("    -V, --version    Print version information");
+}
+
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    if args.iter().any(|a| a == "-h" || a == "--help") {
+        print_help();
+        return Ok(());
+    }
+    if args.iter().any(|a| a == "-V" || a == "--version") {
+        println!("nevotui {}", env!("CARGO_PKG_VERSION"));
+        return Ok(());
+    }
+
     let api = api::Api::new();
     let load_rx = app::spawn_loaders(api.clone());
 
