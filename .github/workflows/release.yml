@@ -92,4 +92,6 @@ jobs:
           node scripts/publish.mjs
       - name: Create GitHub release
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" dist/npm/*/bin/nevotui* --title "$GITHUB_REF_NAME" --generate-notes
