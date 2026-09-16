@@ -17,7 +17,7 @@ const targets = {
   ],
   "darwin-x64": [{ name: "nevotui-darwin-x64", bin: "bin/nevotui" }],
   "darwin-arm64": [{ name: "nevotui-darwin-arm64", bin: "bin/nevotui" }],
-  "win32-x64": [{ name: "nevotui-win32-x64-msvc", bin: "bin/nevotui.exe" }],
+  "win32-x64": [{ name: "nevotui-windows-x64-msvc", bin: "bin/nevotui.exe" }],
 };
 
 const candidates = targets[`${platform}-${arch}`];

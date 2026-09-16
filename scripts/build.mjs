@@ -42,7 +42,7 @@ const TARGETS = {
     cpu: ["arm64"],
   },
   "x86_64-pc-windows-msvc": {
-    pkg: "nevotui-win32-x64-msvc",
+    pkg: "nevotui-windows-x64-msvc",
     os: ["win32"],
     cpu: ["x64"],
   },

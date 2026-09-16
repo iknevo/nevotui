@@ -13,7 +13,7 @@ const ORDER = [
   "nevotui-linux-arm64-musl",
   "nevotui-darwin-x64",
   "nevotui-darwin-arm64",
-  "nevotui-win32-x64-msvc",
+  "nevotui-windows-x64-msvc",
 ];
 
 function npmPublish(dir) {
@@ -26,19 +26,29 @@ function npmPublish(dir) {
   });
 }
 
+let failed = false;
+function publishOrSkip(label, dir) {
+  if (existsSync(dir)) {
+    try {
+      npmPublish(dir);
+    } catch (err) {
+      failed = true;
+      console.error(`\n! Skipped ${label}: ${err.message}`);
+    }
+  }
+}
+
 if (!existsSync(DIST)) {
   console.error("publish.mjs: dist/npm is missing - run scripts/build.mjs first");
   process.exit(1);
 }
 
-for (const pkg of ORDER) {
-  const dir = path.join(DIST, pkg);
-  if (existsSync(dir)) npmPublish(dir);
-}
+for (const pkg of ORDER) publishOrSkip(pkg, path.join(DIST, pkg));
 
 const packed = readdirSync(DIST)
   .filter((d) => !ORDER.includes(d) && existsSync(path.join(DIST, d, "package.json")));
-for (const pkg of packed) npmPublish(path.join(DIST, pkg));
+for (const pkg of packed) publishOrSkip(pkg, path.join(DIST, pkg));
 
-npmPublish(ROOT);
+publishOrSkip("nevotui", ROOT);
+if (failed) process.exit(1);
 console.log("\nAll packages published.");

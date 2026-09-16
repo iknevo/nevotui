@@ -30,6 +30,6 @@
     "nevotui-linux-arm64-musl": "0.1.0",
     "nevotui-darwin-x64": "0.1.0",
     "nevotui-darwin-arm64": "0.1.0",
-    "nevotui-win32-x64-msvc": "0.1.0"
+    "nevotui-windows-x64-msvc": "0.1.0"
   }
 }
