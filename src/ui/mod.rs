@@ -298,6 +298,40 @@ mod tests {
     }
 
     #[test]
+    fn probe_screens() {
+        let mut app = sample_app();
+        for (w, h) in [(90, 20), (120, 40), (80, 24), (50, 20), (200, 50)] {
+            for screen in [
+                Screen::Projects,
+                Screen::Stack,
+                Screen::Experience,
+                Screen::Blog,
+                Screen::Links,
+            ] {
+                let backend = TestBackend::new(w, h);
+                let mut terminal = Terminal::new(backend).unwrap();
+                terminal
+                    .draw(|f| {
+                        app.screen = screen;
+                        draw(f, &mut app);
+                    })
+                    .unwrap();
+                let buf = terminal.backend().buffer();
+                for y in 0..h {
+                    let mut out = String::new();
+                    for x in 0..w {
+                        let ch =
+                            buf.cell((x, y)).unwrap().symbol().chars().next().unwrap_or(' ');
+                        out.push(if ch == ' ' { '.' } else { ch });
+                    }
+                    println!("{y:>2}:{out}");
+                }
+                println!("SCREEN: {screen:?} {w}x{h}");
+            }
+        }
+    }
+
+    #[test]
     fn all_screens_render_narrow() {
         let mut app = sample_app();
         for screen in Screen::ALL {
